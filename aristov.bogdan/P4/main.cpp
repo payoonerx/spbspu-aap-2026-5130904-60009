@@ -43,7 +43,6 @@ int run() {
         return 2;
     }
 
-    // GRT-LSS (задача 10)
     int grt_lss = 0;
     for (size_t i = 1; i + 1 < size; ++i) {
         if (data[i] < data[i - 1] && data[i] > data[i + 1]) {
@@ -51,7 +50,6 @@ int run() {
         }
     }
 
-    // AFT-MAX (задача 12)
     long long max_val = data[0];
     size_t max_pos = 0;
     for (size_t i = 1; i < size; ++i) {
