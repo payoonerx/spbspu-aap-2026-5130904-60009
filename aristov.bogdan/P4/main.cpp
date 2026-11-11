@@ -3,8 +3,7 @@
 #include <iostream>
 #include <new>
 
-namespace aristov
-{
+namespace aristov {
   char * replaceSym(char * dest, const char * src, char from, char to)
   {
     size_t i = 0;
@@ -36,7 +35,8 @@ namespace aristov
 
   char * readLine(std::istream & in)
   {
-    size_t capacity = 16;
+    const size_t initial_capacity = 16;
+    size_t capacity = initial_capacity;
     size_t size = 0;
     char * buf = new (std::nothrow) char[capacity];
     if (!buf) {
