@@ -13,18 +13,20 @@ int run()
   std::size_t size = 0;
   std::size_t capacity = 0;
   long long value = 0;
+  bool zero_seen = false;
 
   while (std::cin >> value)
   {
     if (value == 0)
     {
+      zero_seen = true;
       break;
     }
 
     if (size == capacity)
     {
       const std::size_t new_capacity =
-          capacity == 0 ? INITIAL_CAPACITY : capacity * GROWTH_FACTOR;
+          (capacity == 0) ? INITIAL_CAPACITY : capacity * GROWTH_FACTOR;
 
       long long *new_data = new long long[new_capacity];
 
@@ -42,18 +44,26 @@ int run()
     ++size;
   }
 
+  if (!zero_seen)
+  {
+    delete[] data;
+    std::cerr << "Invalid input\n";
+    return 1;
+  }
+
   if (size == 0)
   {
     delete[] data;
-    std::cout << "0\n0\n";
-    return 0;
+    std::cout << "0\n";
+    std::cerr << "Sequence is too short\n";
+    return 2;
   }
 
   std::size_t grt_lss = 0;
 
   for (std::size_t i = 1; i + 1 < size; ++i)
   {
-    if (data[i] < data[i - 1] && data[i] > data[i + 1])
+    if ((data[i] < data[i - 1]) && (data[i] > data[i + 1]))
     {
       ++grt_lss;
     }
