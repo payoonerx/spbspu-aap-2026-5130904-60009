@@ -1,98 +1,98 @@
 #include <cstddef>
+#include <cstring>
 #include <iostream>
+#include <new>
 
-namespace aristov
+namespace surname
 {
-
-int run()
-{
-  const std::size_t INITIAL_CAPACITY = 16;
-  const std::size_t GROWTH_FACTOR = 2;
-
-  long long *data = nullptr;
-  std::size_t size = 0;
-  std::size_t capacity = 0;
-  long long value = 0;
-  bool zero_seen = false;
-
-  while (std::cin >> value)
+  char * replaceSym(char * dest, const char * src, char from, char to)
   {
-    if (value == 0)
-    {
-      zero_seen = true;
-      break;
+    size_t i = 0;
+    for (; src[i] != '\0'; ++i) {
+      dest[i] = (src[i] == from) ? to : src[i];
     }
+    dest[i] = '\0';
+    return dest;
+  }
 
-    if (size == capacity)
-    {
-      const std::size_t new_capacity =
-          capacity == 0 ? INITIAL_CAPACITY : capacity * GROWTH_FACTOR;
+  char * uniTwo(char * dest, const char * first, const char * second)
+  {
+    size_t i = 0;
+    size_t j = 0;
+    size_t k = 0;
+    while (first[i] != '\0' && second[j] != '\0') {
+      dest[k++] = first[i++];
+      dest[k++] = second[j++];
+    }
+    while (first[i] != '\0') {
+      dest[k++] = first[i++];
+    }
+    while (second[j] != '\0') {
+      dest[k++] = second[j++];
+    }
+    dest[k] = '\0';
+    return dest;
+  }
 
-      long long *const new_data = new long long[new_capacity];
-
-      for (std::size_t i = 0; i < size; ++i)
-      {
-        new_data[i] = data[i];
+  char * readLine(std::istream & in)
+  {
+    size_t capacity = 16;
+    size_t size = 0;
+    char * buf = new (std::nothrow) char[capacity];
+    if (!buf) {
+      return nullptr;
+    }
+    char c = '\0';
+    while (in.get(c) && c != '\n') {
+      if (size + 1 >= capacity) {
+        size_t newCapacity = capacity * 2;
+        char * bigger = new (std::nothrow) char[newCapacity];
+        if (!bigger) {
+          delete[] buf;
+          return nullptr;
+        }
+        std::memcpy(bigger, buf, size);
+        delete[] buf;
+        buf = bigger;
+        capacity = newCapacity;
       }
-
-      delete[] data;
-      data = new_data;
-      capacity = new_capacity;
+      buf[size++] = c;
     }
-
-    data[size] = value;
-    ++size;
+    buf[size] = '\0';
+    return buf;
   }
-
-  if (!zero_seen)
-  {
-    delete[] data;
-    std::cerr << "Invalid input\n";
-    return 1;
-  }
-
-  if (size == 0)
-  {
-    delete[] data;
-    std::cout << "0\n";
-    std::cerr << "Sequence is too short\n";
-    return 2;
-  }
-
-  std::size_t grt_lss = 0;
-
-  for (std::size_t i = 1; i + 1 < size; ++i)
-  {
-    if (data[i] < data[i - 1] && data[i] > data[i + 1])
-    {
-      ++grt_lss;
-    }
-  }
-
-  long long max_value = data[0];
-  std::size_t max_position = 0;
-
-  for (std::size_t i = 1; i < size; ++i)
-  {
-    if (data[i] > max_value)
-    {
-      max_value = data[i];
-      max_position = i;
-    }
-  }
-
-  const std::size_t aft_max = size - max_position - 1;
-
-  std::cout << grt_lss << '\n';
-  std::cout << aft_max << '\n';
-
-  delete[] data;
-  return 0;
-}
-
 }
 
 int main()
 {
-  return aristov::run();
+  const char * secondLiteral = "def_";
+  const char from = 'c';
+  const char to = 'b';
+
+  char * input = surname::readLine(std::cin);
+  if (!input) {
+    std::cerr << "Error: not enough memory\n";
+    return 1;
+  }
+
+  size_t len1 = std::strlen(input);
+  size_t len2 = std::strlen(secondLiteral);
+
+  char * result10 = new (std::nothrow) char[len1 + 1];
+  char * result12 = new (std::nothrow) char[len1 + len2 + 1];
+  if (!result10 || !result12) {
+    std::cerr << "Error: not enough memory\n";
+    delete[] input;
+    delete[] result10;
+    delete[] result12;
+    return 1;
+  }
+
+  std::cout << surname::replaceSym(result10, input, from, to) << "\n";
+  std::cout << surname::uniTwo(result12, input, secondLiteral) << "\n";
+
+  delete[] input;
+  delete[] result10;
+  delete[] result12;
+  return 0;
 }
