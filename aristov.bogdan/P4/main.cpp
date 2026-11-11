@@ -3,7 +3,7 @@
 #include <iostream>
 #include <new>
 
-namespace surname
+namespace aristov
 {
   char * replaceSym(char * dest, const char * src, char from, char to)
   {
@@ -45,8 +45,8 @@ namespace surname
     char c = '\0';
     while (in.get(c) && c != '\n') {
       if (size + 1 >= capacity) {
-        size_t newCapacity = capacity * 2;
-        char * bigger = new (std::nothrow) char[newCapacity];
+        const size_t new_capacity = capacity * 2;
+        char * const bigger = new (std::nothrow) char[new_capacity];
         if (!bigger) {
           delete[] buf;
           return nullptr;
@@ -54,7 +54,7 @@ namespace surname
         std::memcpy(bigger, buf, size);
         delete[] buf;
         buf = bigger;
-        capacity = newCapacity;
+        capacity = new_capacity;
       }
       buf[size++] = c;
     }
@@ -65,21 +65,26 @@ namespace surname
 
 int main()
 {
-  const char * secondLiteral = "def_";
+  const char * const second_literal = "def_";
   const char from = 'c';
   const char to = 'b';
 
-  char * input = surname::readLine(std::cin);
+  char * const input = aristov::readLine(std::cin);
   if (!input) {
     std::cerr << "Error: not enough memory\n";
     return 1;
   }
 
-  size_t len1 = std::strlen(input);
-  size_t len2 = std::strlen(secondLiteral);
+  const size_t len1 = std::strlen(input);
+  if (len1 == 0 && std::cin.fail()) {
+    std::cerr << "Error: empty input\n";
+    delete[] input;
+    return 1;
+  }
+  const size_t len2 = std::strlen(second_literal);
 
-  char * result10 = new (std::nothrow) char[len1 + 1];
-  char * result12 = new (std::nothrow) char[len1 + len2 + 1];
+  char * const result10 = new (std::nothrow) char[len1 + 1];
+  char * const result12 = new (std::nothrow) char[len1 + len2 + 1];
   if (!result10 || !result12) {
     std::cerr << "Error: not enough memory\n";
     delete[] input;
@@ -88,8 +93,8 @@ int main()
     return 1;
   }
 
-  std::cout << surname::replaceSym(result10, input, from, to) << "\n";
-  std::cout << surname::uniTwo(result12, input, secondLiteral) << "\n";
+  std::cout << aristov::replaceSym(result10, input, from, to) << "\n";
+  std::cout << aristov::uniTwo(result12, input, second_literal) << "\n";
 
   delete[] input;
   delete[] result10;
