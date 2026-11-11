@@ -1,9 +1,11 @@
 #include <cstddef>
 #include <iostream>
 
-namespace aristov {
+namespace aristov
+{
 
-int run() {
+int run()
+{
   const std::size_t INITIAL_CAPACITY = 16;
   const std::size_t GROWTH_FACTOR = 2;
 
@@ -11,19 +13,25 @@ int run() {
   std::size_t size = 0;
   std::size_t capacity = 0;
   long long value = 0;
+  bool zero_seen = false;
 
-  while (std::cin >> value) {
-    if (value == 0) {
+  while (std::cin >> value)
+  {
+    if (value == 0)
+    {
+      zero_seen = true;
       break;
     }
 
-    if (size == capacity) {
+    if (size == capacity)
+    {
       const std::size_t new_capacity =
           capacity == 0 ? INITIAL_CAPACITY : capacity * GROWTH_FACTOR;
 
       long long *const new_data = new long long[new_capacity];
 
-      for (std::size_t i = 0; i < size; ++i) {
+      for (std::size_t i = 0; i < size; ++i)
+      {
         new_data[i] = data[i];
       }
 
@@ -36,7 +44,15 @@ int run() {
     ++size;
   }
 
-  if (size == 0) {
+  if (!zero_seen && size > 0)
+  {
+    delete[] data;
+    std::cerr << "Invalid input\n";
+    return 1;
+  }
+
+  if (size == 0)
+  {
     delete[] data;
     std::cout << "0\n0\n";
     return 0;
@@ -44,8 +60,10 @@ int run() {
 
   std::size_t grt_lss = 0;
 
-  for (std::size_t i = 1; i + 1 < size; ++i) {
-    if (data[i] < data[i - 1] && data[i] > data[i + 1]) {
+  for (std::size_t i = 1; i + 1 < size; ++i)
+  {
+    if (data[i] < data[i - 1] && data[i] > data[i + 1])
+    {
       ++grt_lss;
     }
   }
@@ -53,8 +71,10 @@ int run() {
   long long max_value = data[0];
   std::size_t max_position = 0;
 
-  for (std::size_t i = 1; i < size; ++i) {
-    if (data[i] > max_value) {
+  for (std::size_t i = 1; i < size; ++i)
+  {
+    if (data[i] > max_value)
+    {
       max_value = data[i];
       max_position = i;
     }
@@ -62,7 +82,8 @@ int run() {
 
   const std::size_t aft_max = size - max_position - 1;
 
-  std::cout << grt_lss << '\n' << aft_max << '\n';
+  std::cout << grt_lss << '\n';
+  std::cout << aft_max << '\n';
 
   delete[] data;
   return 0;
@@ -70,6 +91,7 @@ int run() {
 
 }
 
-int main() {
+int main()
+{
   return aristov::run();
 }
