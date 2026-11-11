@@ -44,7 +44,7 @@ int run()
     ++size;
   }
 
-  if (!zero_seen && size > 0)
+  if (!zero_seen)
   {
     delete[] data;
     std::cerr << "Invalid input\n";
@@ -54,8 +54,9 @@ int run()
   if (size == 0)
   {
     delete[] data;
-    std::cout << "0\n0\n";
-    return 0;
+    std::cout << "0\n";
+    std::cerr << "Sequence is too short\n";
+    return 2;
   }
 
   std::size_t grt_lss = 0;
